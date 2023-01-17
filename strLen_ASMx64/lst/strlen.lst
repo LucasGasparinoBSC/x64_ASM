@@ -1,0 +1,35 @@
+     1                                  ; strlen.asm
+     2                                  
+     3                                  section .data
+     4 00000000 48656C6C6F2C20776F-     	msg1 db "Hello, world!",10,0      ; String with new line and null terminator chars
+     4 00000009 726C64210A00       
+     5                                  	msg1Len equ $-msg1-1              ; Length of msg1 excluding null terminator
+     6 0000000F 416C69766520616E64-     	msg2 db "Alive and Kicking!",10,0 ; String with new line and null terminator chars
+     6 00000018 204B69636B696E6721-
+     6 00000021 0A00               
+     7                                  	msg2Len equ $-msg2-1              ; Length of msg1 excluding null terminator
+     8 00000023 6501000000000000        	radius dq 357
+     9 0000002B 1F85EB51B81E0940        	pi dq 3.14
+    10                                  section .bss
+    11                                  section .text
+    12                                  	global main
+    13                                  main:
+    14 00000000 55                      	push rbp         ; Function prologue
+    15 00000001 4889E5                  	mov rbp, rsp     ; Function prologue
+    16 00000004 B801000000              	mov rax, 1       ; System call number for write
+    17 00000009 BF01000000              	mov rdi, 1       ; File descriptor for stdout
+    18 0000000E 48BE-                   	mov rsi, msg1    ; Address of string to write
+    18 00000010 [0000000000000000] 
+    19 00000018 BA0E000000              	mov rdx, msg1Len ; Length of string to write
+    20 0000001D 0F05                    	syscall          ; Invoke operating system to write string
+    21 0000001F B801000000              	mov rax, 1       ; System call number for write
+    22 00000024 BF01000000              	mov rdi, 1       ; File descriptor for stdout
+    23 00000029 48BE-                   	mov rsi, msg2    ; Address of string to write
+    23 0000002B [0F00000000000000] 
+    24 00000033 BA13000000              	mov rdx, msg2Len ; Length of string to write
+    25 00000038 0F05                    	syscall          ; Invoke operating system to write string
+    26 0000003A 4889EC                  	mov rsp, rbp     ; Function epilogue
+    27 0000003D 5D                      	pop rbp          ; Function epilogue
+    28 0000003E B83C000000              	mov rax, 60      ; System call number for exit
+    29 00000043 BF00000000              	mov rdi, 0	     ; Exit code
+    30 00000048 0F05                    	syscall          ; Invoke operating system to exit

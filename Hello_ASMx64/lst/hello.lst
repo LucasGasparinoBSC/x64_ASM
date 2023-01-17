@@ -1,0 +1,56 @@
+     1                                  ;hello.asm
+     2                                  
+     3                                  ; Data section: section for declaring initialized data in the format:
+     4                                  ; 		<var name> <type> <value>
+     5                                  ; Possible data types are:
+     6                                  ; 		db - byte - 8 bits
+     7                                  ; 		dw - word - 16 bits
+     8                                  ; 		dd - double word - 32 bits
+     9                                  ; 		dq - quad word - 64 bits
+    10                                  ; this section can also contain constants that cannot be changed by the program, declared as:
+    11                                  ; 		<var name> equ <value>
+    12                                  section .data
+    13                                  	; Here, 'msg' points to the memory address of the 1st byte (db) of the string, character "H"
+    14                                  	; The 0 after the string indicates the end of a human-readable string (NULL terminator)
+    15 00000000 48656C6C6F2C20776F-         msg db "Hello, world", 0
+    15 00000009 726C6400           
+    16                                  
+    17                                  ; BSS section: section for declaring uninitialized data in the format:
+    18                                  ; 		<var name> <type> <number>
+    19                                  ; Possible data types are:
+    20                                  ; 		resb - byte - 8 bits
+    21                                  ; 		resw - word - 16 bits
+    22                                  ; 		resd - double word - 32 bits
+    23                                  ; 		resq - quad word - 64 bits
+    24                                  ; For example, an array with 20 64-bit entries can be declared as:
+    25                                  ; 		arr resq 20
+    26                                  ; Variables declared here do not have values: at execution time, the program
+    27                                  ; will allocate memory for them, and initialize them to zero. Thet can later be
+    28                                  ; changed by the program.
+    29                                  section .bss
+    30                                  
+    31                                  ; Text section: section for declaring the source code itself. It starts with the
+    32                                  ; entry point of the program, which is the function 'main' in this case, declared
+    33                                  ; as a global function.
+    34                                  section .text
+    35                                      global main ; declare label main as a global function, and start point of the program
+    36                                  
+    37                                  ; Label main: description
+    38                                  ; Moves a system call code (1) into the RAX register, meanning  it will be used for writing.
+    39                                  ; Moves the file descriptor (1) into the RDI register, meaning it will be used for stdout (terrminal).
+    40                                  ; Moves the address of the string into the RSI register, meaning it will be used for the string to display.
+    41                                  ; Moves the length of the string into the RDX register, meaning it will be used for the length of the string.
+    42                                  ; Executes the system call.
+    43                                  ; Moves a system call code (60) into the RAX register, meanning  it will be used for exiting.
+    44                                  ; Moves the exit code (0) into the RDI register, meaning it will be used for success exit code.
+    45                                  ; Executes the system call.
+    46                                  main:            ; Label 'main' where the program starts.
+    47 00000000 B801000000                  mov rax, 1   ; 1 = write
+    48 00000005 BF01000000                  mov rdi, 1   ; 1 = stdout
+    49 0000000A 48BE-                       mov rsi, msg ; string to display in rsi
+    49 0000000C [0000000000000000] 
+    50 00000014 BA0C000000                  mov rdx, 12  ; length of string in rdx
+    51 00000019 0F05                        syscall      ; display the string
+    52 0000001B B83C000000                  mov rax, 60  ; 60 = exit
+    53 00000020 BF00000000                  mov rdi, 0   ; 0 = success exit code
+    54 00000025 0F05                        syscall      ; exit
