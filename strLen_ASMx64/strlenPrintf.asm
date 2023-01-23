@@ -29,13 +29,13 @@ main:
 	; print radius
 	mov  rax, 0 ; No floating point
 	mov  rdi, fmtint
-	mov  rsi, [radius] ; Why the square brackets?
+	mov  rsi, [radius] ; Brackets: take content at addr. of radius and put it in rsi (printf expects a value for numbers)
 	call printf
 	; print pi
-	mov  rax, 1 ; 1 xmm register used
-	movq xmm0, [pi] ; Why the square brackets?
+	mov  rax, 1 ; 1 xmm register used for floating point value
+	movq xmm0, [pi]
 	mov  rdi, fmtflt
 	call printf
 	mov  rsp, rbp
 	pop  rbp
-	ret
+	ret ; equivalent to (mov rax, 60 ; mov rdi, 0 ; syscall)
