@@ -1,0 +1,30 @@
+     1                                  ; loop2.asm
+     2                                  
+     3                                  extern printf
+     4                                  
+     5                                  section .data
+     6 00000000 00CA9A3B00000000            number dq 1000000000
+     7 00000008 5468652073756D2066-         fmt    db "The sum from 0 to %ld is %ld", 10, 0
+     7 00000011 726F6D203020746F20-
+     7 0000001A 256C6420697320256C-
+     7 00000023 640A00             
+     8                                  section .bss
+     9                                  section .text
+    10                                      global main
+    11                                  main:
+    12 00000000 55                          push rbp
+    13 00000001 4889E5                      mov  rbp, rsp
+    14 00000004 488B0C25[00000000]          mov  rcx, [number] ; Initialize rcx to the contents of number (decremental counter).
+    15 0000000C 4831C0                      xor  rax, rax      ; Initialize rax to 0 (sum).
+    16                                  bloop:                 ; Loop label
+    17 0000000F 4801C8                      add  rax, rcx      ; Add the current value of rcx to rax.
+    18 00000012 E2FB                        loop bloop         ; Decrement rcx by 1 and jump back to bloop if rcx is not 0.
+    19 00000014 48BF-                       mov  rdi, fmt      ; Initialize rdi to the address of fmt.
+    19 00000016 [0800000000000000] 
+    20 0000001E 488B3425[00000000]          mov  rsi, [number] ; Initialize rsi to the contents of number.
+    21 00000026 4889C2                      mov  rdx, rax      ; Initialize rdx to the contents of rax.
+    22 00000029 4831C0                      xor  rax, rax      ; No xmm involved
+    23 0000002C E8(00000000)                call printf        ; Call printf.
+    24 00000031 4889EC                      mov  rsp, rbp
+    25 00000034 5D                          pop  rbp
+    26 00000035 C3                          ret

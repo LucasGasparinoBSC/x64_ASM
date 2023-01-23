@@ -1,0 +1,32 @@
+     1                                  ; loop1.asm
+     2                                  
+     3                                  extern printf
+     4                                  
+     5                                  section .data
+     6 00000000 00CA9A3B00000000            number dq 1000000000
+     7 00000008 5468652073756D2066-         fmt    db "The sum from 0 to %ld is %ld", 10, 0
+     7 00000011 726F6D203020746F20-
+     7 0000001A 256C6420697320256C-
+     7 00000023 640A00             
+     8                                  section .bss
+     9                                  section .text
+    10                                      global main
+    11                                  main:
+    12 00000000 55                          push rbp
+    13 00000001 4889E5                      mov  rbp, rsp
+    14 00000004 BB00000000                  mov  rbx, 0        ; Counter for the loop
+    15 00000009 4831C0                      xor  rax, rax      ; Sum stored in rax, initialized to 0
+    16                                  jloop:                 ; Loop label
+    17 0000000C 4801D8                      add  rax, rbx      ; Add current rbx value to the sum in rax
+    18 0000000F 48FFC3                      inc  rbx           ; Increment rbx
+    19 00000012 483B1C25[00000000]          cmp  rbx, [number] ; Compare rbx to the content of number
+    20 0000001A 7EF0                        jle  jloop         ; If rbx <= number, repeat the loop
+    21 0000001C 48BF-                       mov  rdi, fmt      ; First argument for printf
+    21 0000001E [0800000000000000] 
+    22 00000026 488B3425[00000000]          mov  rsi, [number] ; Second argument for printf
+    23 0000002E 4889C2                      mov  rdx, rax      ; Third argument for printf
+    24 00000031 4831C0                      xor  rax, rax      ; No xmm involved
+    25 00000034 E8(00000000)                call printf        ; Call printf
+    26 00000039 4889EC                      mov  rsp, rbp
+    27 0000003C 5D                          pop  rbp
+    28 0000003D C3                          ret

@@ -1,0 +1,33 @@
+     1                                  section .data
+     2 00000000 7B                          bNum  db 123
+     3 00000001 3930                        wNum  dw 12345
+     4 00000003 D2029649                    dNum  dd 1234567890
+     5 00000007 1581E97DF4102211            qNum1 dq 1234567890123456789
+     6 0000000F 40E2010000000000            qNum2 dq 123456
+     7 00000017 1F85EB51B81E0940            qNum3 dq 3.14
+     8                                  
+     9                                  section .bss
+    10                                  section .text
+    11                                      global main
+    12                                  main:
+    13 00000000 55                          push rbp
+    14 00000001 4889E5                      mov  rbp, rsp
+    15 00000004 48C7C0FFFFFFFF              mov  rax, -1          ; Fill rax with 1s
+    16 0000000B 8A0425[00000000]            mov  al , byte [bNum] ; Upper bits of rax are not not correct
+    17 00000012 4831C0                      xor  rax, rax
+    18 00000015 8A0425[00000000]            mov  al , byte [bNum]
+    19 0000001C 48C7C0FFFFFFFF              mov  rax, -1
+    20 00000023 668B0425[01000000]          mov  ax , word [wNum]
+    21 0000002B 4831C0                      xor  rax, rax
+    22 0000002E 668B0425[01000000]          mov  ax , word [wNum]
+    23 00000036 48C7C0FFFFFFFF              mov  rax, -1
+    24 0000003D 8B0425[03000000]            mov  eax, dword [dNum] ; Upper bits of rax are cleared here
+    25 00000044 48C7C0FFFFFFFF              mov  rax, -1
+    26 0000004B 488B0425[07000000]          mov  rax, qword [qNum1]
+    27 00000053 48890425[0F000000]          mov qword [qNum2], rax ; ?
+    28 0000005B B840E20100                  mov  rax, 123456; source operand an immediate value (?)
+    29 00000060 F30F7E0425-                 movq xmm0, [qNum3]; floating point instruction
+    29 00000065 [17000000]         
+    30 00000069 4889EC                      mov  rsp, rbp
+    31 0000006C 5D                          pop  rbp
+    32 0000006D C3                          ret
